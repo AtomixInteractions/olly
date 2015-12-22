@@ -1,6 +1,6 @@
 {
   "name": "ras",
-  "version": "0.0.1-skelet",
+  "version": "0.0.0-initial",
   "description": "REST API router Service",
   "main": "lib/service",
   "scripts": {
