@@ -1,4 +1,6 @@
 
+var webpack = require('webpack');
+
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'development';
 var DEVELOPMENT = process.env.NODE_ENV === 'development';
 
