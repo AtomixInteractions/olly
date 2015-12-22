@@ -1,5 +1,9 @@
 
+class Olly {
+  constructor() {
+    this.demo = 'Not implemented!';
+  }
+}
 
-module.exports = {
-  Ras: function(){ return { demo: 'Not implemented!' } }
-};
+
+module.exports = Olly;
