@@ -1,10 +1,15 @@
 {
   "name": "ras",
-  "version": "0.0.0-initial",
+  "version": "0.0.1-skeleton",
   "description": "REST API router Service",
-  "main": "index.js",
+  "main": "lib/service",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "build:prod": "NODE_ENV=production npm run build"
+  },
+  "bin": {
+    "ras": "bin/ras.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +28,14 @@
   "bugs": {
     "url": "https://github.com/AtomixInteractions/ras/issues"
   },
-  "homepage": "https://github.com/AtomixInteractions/ras#readme"
+  "homepage": "https://github.com/AtomixInteractions/ras#readme",
+  "dependencies": {
+    "yamljs": "^0.2.4"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.34",
+    "babel-loader": "^5.3.3",
+    "file-loader": "^0.8.5",
+    "webpack": "^1.12.9"
+  }
 }
