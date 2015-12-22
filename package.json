@@ -9,7 +9,7 @@
     "dev": "nodemon -w ./src --exec gulp build"
   },
   "bin": {
-    "ras": "bin/olly.js"
+    "olly": "bin/olly.js"
   },
   "repository": {
     "type": "git",
