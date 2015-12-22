@@ -1,0 +1,27 @@
+{
+  "name": "ras",
+  "version": "0.0.0-initial",
+  "description": "REST API router Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AtomixInteractions/ras.git"
+  },
+  "keywords": [
+    "server",
+    "raml",
+    "http",
+    "api",
+    "rest",
+    "express"
+  ],
+  "author": "LestaD <i.am@lestad.net> (Sergey Sova)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/AtomixInteractions/ras/issues"
+  },
+  "homepage": "https://github.com/AtomixInteractions/ras#readme"
+}
