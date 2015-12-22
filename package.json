@@ -1,6 +1,6 @@
 {
   "name": "ras",
-  "version": "0.0.1-skeleton",
+  "version": "0.0.1-skelet",
   "description": "REST API router Service",
   "main": "lib/service",
   "scripts": {
@@ -23,7 +23,7 @@
     "rest",
     "express"
   ],
-  "author": "LestaD <i.am@lestad.net> (Sergey Sova)",
+  "author": "Sergey Sova <i.am@lestad.net> (https://lestad.net)",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/AtomixInteractions/ras/issues"
