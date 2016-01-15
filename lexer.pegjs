@@ -207,7 +207,7 @@ StringToken           = "String"        !IdentifierPart
 BooleanToken          = "Boolean"       !IdentifierPart
 NumberToken           = "Number"        !IdentifierPart
 ObjectToken           = "Object"        !IdentifierPart
-DateToken             = "DateToken"     !IdentifierPart
+DateToken             = "Date"          !IdentifierPart
 ModelToken            = "model"         !IdentifierPart
 ApiToken              = "api"           !IdentifierPart
 HostToken             = "host"          !IdentifierPart
@@ -312,7 +312,54 @@ Statement
   / SchemeDefinition
   / HostDefinition
   / MediaTypeDefinition
+  / ModelDefinition
 
+
+// ===== MODEL DEFINITION ===== //
+
+PropTypeVariant
+  = n:IdentifierName { return n.name }
+
+PropType "prop type"
+  = name:PropTypeVariant array:"[]"? {
+    return {
+      type:    name,
+      array:   array ? true : false
+    }
+  }
+
+PropIdentifier "prop id"
+  = id:Identifier attribute:("!" / "?")? {
+    return {
+      name: id.name,
+      optional: attribute === "?",
+      required: attribute === "!"
+    }
+  }
+
+PropStatement "prop"
+  = PropToken __ type:PropType __ id:PropIdentifier EOS {
+    return {
+      type:       "PropStatement",
+      propType:   type,
+      name:       id
+    }
+  }
+
+PropStatementList
+  = head:PropStatement tail:(__ PropStatement)* { return buildList(head, tail, 1); }
+
+ModelBlock "model block"
+  = "{" __ body:(PropStatementList __)? "}" { return builtBlockStatement(extractOptional(body, 0)); }
+
+ModelDefinition "model"
+  = ModelToken __ modelName:Identifier __ block:ModelBlock {
+    return {
+      type:       "ModelDefinition",
+      name:       modelName.name,
+      block:      block
+    }
+  }
 
 
 // ===== API DEFINITION ===== //
