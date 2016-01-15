@@ -82,7 +82,7 @@
 
 
 Start
-  = __ program:Program __ { return program; }
+  = __ program:Configuration __ { return program; }
 
 /* ----- A.1 Lexical Grammar ----- */
 
@@ -202,6 +202,9 @@ DecimalDigit
 NonZeroDigit
   = [1-9]
 
+NullToken             = "null"          !IdentifierPart
+TrueToken             = "true"          !IdentifierPart
+FalseToken            = "false"         !IdentifierPart
 
 StringToken           = "String"        !IdentifierPart
 BooleanToken          = "Boolean"       !IdentifierPart
@@ -315,6 +318,55 @@ Statement
   / ModelDefinition
 
 
+// ===== LITERALS ===== //
+
+Literal
+  = NullLiteral
+  / BooleanLiteral
+  / NumericLiteral
+  / StringLiteral
+
+NullLiteral
+  = NullToken { return { type: "Literal", value: null }; }
+
+BooleanLiteral
+  = TrueToken  { return { type: "Literal", value: true  }; }
+  / FalseToken { return { type: "Literal", value: false }; }
+
+StringLiteral "string"
+  = '"' chars:DoubleStringCharacter* '"' {
+      return { type: "Literal", value: chars.join("") };
+    }
+  / "'" chars:SingleStringCharacter* "'" {
+      return { type: "Literal", value: chars.join("") };
+    }
+
+DoubleStringCharacter
+  = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
+
+SingleStringCharacter
+  = !("'" / "\\" / LineTerminator) SourceCharacter { return text(); }
+
+NumericLiteral "number"
+  = literal:DecimalLiteral !(IdentifierStart / DecimalDigit) {
+      return literal;
+    }
+  / literal:IntegerLiteral !IdentifierStart {
+    return literal;
+  }
+
+IntegerLiteral
+  = "0"
+  / head:NonZeroDigit tail:(DecimalDigit)* {
+    return { type: "Literal", value: parseInt(text()) }
+  }
+
+DecimalLiteral
+  = DecimalIntegerLiteral "." DecimalDigit* {
+      return { type: "Literal", value: parseFloat(text()) };
+    }
+
+
 // ===== MODEL DEFINITION ===== //
 
 PropTypeVariant
@@ -329,7 +381,7 @@ PropType "prop type"
   }
 
 PropIdentifier "prop id"
-  = id:Identifier attribute:("!" / "?")? {
+  = id:IdentifierName attribute:("!" / "?")? {
     return {
       name: id.name,
       optional: attribute === "?",
@@ -337,12 +389,18 @@ PropIdentifier "prop id"
     }
   }
 
+PropAssignStatement
+  = "=" __ value:Literal {
+    return value;
+  }
+
 PropStatement "prop"
-  = PropToken __ type:PropType __ id:PropIdentifier EOS {
+  = PropToken __ type:PropType __ id:PropIdentifier __ value:PropAssignStatement? EOS {
     return {
       type:       "PropStatement",
       propType:   type,
-      name:       id
+      propId:     id,
+      value:      value
     }
   }
 
@@ -512,10 +570,10 @@ SchemeDefinition "scheme"
 // ===== PROGRAM ===== //
 
 
-Program
+Configuration
   = body:SourceElements? {
       return {
-        type: "Program",
+        type: "Configuration",
         body: optionalList(body)
       };
     }
