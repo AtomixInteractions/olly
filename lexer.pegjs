@@ -231,6 +231,8 @@ ControllerToken       = "controller"    !IdentifierPart
 ToToken               = "to"            !IdentifierPart
 ExcessToken           = "excess"        !IdentifierPart
 VersionToken          = "version"       !IdentifierPart
+DeprecatedToken       = "deprecated"    !IdentifierName
+
 HeaderToken           = "header"        !IdentifierPart
 PathToken             = "path"          !IdentifierPart
 GetToken              = "get"           !IdentifierPart
@@ -503,7 +505,15 @@ RouteCondition "route condition"
   }
 
 RouteDefinition "route"
-  = method:RouteToken __ condition:RouteCondition EOS {
+  = method:RouteToken __ condition:RouteCondition __ block:RouteBlock {
+    return {
+      type:         "RouteDefinition",
+      method:       method.join('').toUpperCase(),
+      condition:    (condition ? condition : {}),
+      block:        builtBlockStatement(block)
+    }
+  }
+  / method:RouteToken __ condition:RouteCondition EOS {
     return {
       type:         "RouteDefinition",
       method:       method.join('').toUpperCase(),
@@ -511,6 +521,30 @@ RouteDefinition "route"
       block:        builtBlockStatement({})
     }
   }
+
+
+// ===== ROUTE STATEMENTS ===== //
+
+RouteStatement
+  = DeprecatedStatement
+
+RouteStatementList
+  = head:RouteStatement tail:(__ RouteStatement)* { return buildList(head, tail, 1); }
+
+RouteBlock
+  = "{" __ body:(RouteStatementList __)? "}" { return builtBlockStatement(extractOptional(body, 0)); }
+
+
+// ===== DEPRECATED STATEMENT ===== //
+
+DeprecatedStatement "deprecated"
+  = DeprecatedToken __ reason:StringLiteral EOS {
+    return {
+      type:     "DeprecatedStatement",
+      reason:   reason.value
+    }
+  }
+
 
 
 // ===== MEDIATYPE DEFINITION ===== //
