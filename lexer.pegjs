@@ -311,6 +311,7 @@ Statement
   = ApiDefinition
   / SchemeDefinition
   / HostDefinition
+  / MediaTypeDefinition
 
 
 
@@ -320,6 +321,7 @@ ApiStatement
   = VersionDefinition
   / SchemeDefinition
   / HostDefinition
+  / MediaTypeDefinition
 
 ApiStatementList
   = head:ApiStatement tail:(__ ApiStatement)* { return buildList(head, tail, 1); }
@@ -337,12 +339,33 @@ ApiDefinition "api"
   }
 
 
+// ===== MEDIATYPE DEFINITION ===== //
+
+MediaTypeValueable
+  = id:IdentifierName {
+   return id.name;
+  }
+
+MediaTypeValue
+  = MediaTypeValueable "/" MediaTypeValueable ("+" MediaTypeValueable)? {
+    return text();
+  }
+
+MediaTypeDefinition "mediaType"
+  = MediaTypeToken __ head:MediaTypeValue tail:(__ MediaTypeValue)* EOS {
+    return {
+      type:       "MediaTypeDefinition",
+      values:     buildList(head, tail, 1)
+    }
+  }
+
+
 // ===== HOST DEFINITION ===== //
 
 HostBaseIdentifier
- = id:IdentifierName {
-  return id.name;
- }
+  = id:IdentifierName {
+   return id.name;
+  }
 
 HostBasePart
   = head:HostBaseIdentifier tail:("." HostBaseIdentifier)+ {
