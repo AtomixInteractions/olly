@@ -427,6 +427,7 @@ ApiStatement
   / SchemeDefinition
   / HostDefinition
   / MediaTypeDefinition
+  / RouteDefinition
 
 ApiStatementList
   = head:ApiStatement tail:(__ ApiStatement)* { return buildList(head, tail, 1); }
@@ -439,7 +440,75 @@ ApiDefinition "api"
     return {
       type:     "ApiDefinition",
       block:    block,
-      version:  version ? Number(version.join('')) : null
+      version:  version ? Number(version.join('')) : []
+    }
+  }
+
+
+// ===== ROUTES DEFINITION ===== //
+
+RouteToken
+  = GetToken
+  / PostToken
+  / PutToken
+  / PatchToken
+  / HeadToken
+  / DeleteToken
+  / OptionsToken
+
+RoutePathIdentifier
+  = name:IdentifierName { return name.name; }
+
+RoutePathTail
+  = "/" RoutePathIdentifier { return text(); }
+  / "/:" RoutePathIdentifier { return text(); }
+
+RoutePath
+  = head:RoutePathTail tail:RoutePathTail* {
+    return head + tail.join('');
+  }
+
+RouteToStatement
+  = ToToken __ controller:IdentifierName "@" action:IdentifierName {
+    return {
+      controller: controller.name,
+      action: action.name
+    }
+  }
+  / ToToken __ controller:IdentifierName {
+    return {
+      controller: controller.name,
+      action: false
+    }
+  }
+  / ToToken __ "@" action:IdentifierName {
+    return {
+      controller: false,
+      action: action.name
+    }
+  }
+
+RouteCondition "route condition"
+  = path:RoutePath __ to:RouteToStatement {
+    return {
+      path: path,
+      to: to
+    }
+  }
+  / path:RoutePath {
+    return {
+      path: path,
+      to: { controller: false, action: false }
+    }
+  }
+
+RouteDefinition "route"
+  = method:RouteToken __ condition:RouteCondition EOS {
+    return {
+      type:         "RouteDefinition",
+      method:       method.join('').toUpperCase(),
+      condition:    (condition ? condition : {}),
+      block:        builtBlockStatement({})
     }
   }
 
