@@ -1,7 +1,7 @@
 {
   "name": "olly",
-  "version": "0.0.0-dev.2",
-  "description": "REST API router Service",
+  "version": "0.0.0-dev.3",
+  "description": "Micro framework for building REST API",
   "main": "lib/service",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -30,13 +30,13 @@
   },
   "homepage": "https://github.com/AtomixInteractions/olly#readme",
   "dependencies": {
-    "yamljs": "^0.2.4"
   },
   "devDependencies": {
     "babel-core": "^5.8.34",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.3.0",
     "gulp-rimraf": "^0.2.0",
+    "pegjs": "^0.9.0",
     "webpack": "^1.12.9"
   }
 }
