@@ -2,7 +2,7 @@
 
 Now in development [join](https://github.com/AtomixInteractions/olly/pulls)
 
-Olly is a framework to built API. Olly configurable by nginx-like config.
+Olly — micro framework to build REST API. Olly configurable by nginx-like config.
 
 ```nginx
 # for PEG.js
