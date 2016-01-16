@@ -1,4 +1,10 @@
-
+/*
+ * Olly Configuration Grammar
+ * ==========================
+ *
+ * Based on Nginx configurate. That config is the remwrited JavaScript Grammar.
+ * Author: Sergey Sova <i.am@lestad.net> (https://lestad.top)
+ */
 
 
 {
