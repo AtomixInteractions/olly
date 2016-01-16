@@ -205,6 +205,7 @@ NonZeroDigit
 NullToken             = "null"          !IdentifierPart
 TrueToken             = "true"          !IdentifierPart
 FalseToken            = "false"         !IdentifierPart
+NoneToken             = "none"          !IdentifierPart
 
 StringToken           = "String"        !IdentifierPart
 BooleanToken          = "Boolean"       !IdentifierPart
@@ -649,6 +650,12 @@ VersionDefinition "version"
       type: "VersionDefinition",
       mode: "path",
       path: path ? path : null
+    }
+  }
+  / VersionToken __ NoneToken EOS {
+    return {
+      type: "VersionDefinition",
+      mode: "none"
     }
   }
 
