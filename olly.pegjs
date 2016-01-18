@@ -219,6 +219,7 @@ NumberToken           = "Number"        !IdentifierPart
 ObjectToken           = "Object"        !IdentifierPart
 DateToken             = "Date"          !IdentifierPart
 ModelToken            = "model"         !IdentifierPart
+ExtendsToken          = "extends"       !IdentifierPart
 ApiToken              = "api"           !IdentifierPart
 HostToken             = "host"          !IdentifierPart
 SchemeToken           = "scheme"        !IdentifierPart
@@ -414,11 +415,15 @@ PropStatement "prop"
     }
   }
 
-PropStatementList
-  = head:PropStatement tail:(__ PropStatement)* { return buildList(head, tail, 1); }
+ModelStatement
+  = PropStatement
+  / ModelExtendsDefinition
+
+ModelStatementList
+  = head:ModelStatement tail:(__ ModelStatement)* { return buildList(head, tail, 1); }
 
 ModelBlock "model block"
-  = "{" __ body:(PropStatementList __)? "}" { return builtBlockStatement(extractOptional(body, 0)); }
+  = "{" __ body:(ModelStatementList __)? "}" { return builtBlockStatement(extractOptional(body, 0)); }
 
 ModelDefinition "model"
   = ModelToken __ modelName:Identifier __ block:ModelBlock {
@@ -426,6 +431,17 @@ ModelDefinition "model"
       type:       "ModelDefinition",
       name:       modelName.name,
       block:      block
+    }
+  }
+
+
+// ===== MODEL EXTENDS DEFINITION ===== //
+
+ModelExtendsDefinition
+  = ExtendsToken __ name:IdentifierName EOS {
+    return {
+      type:       "ModelExtendsDefinition",
+      extends:    name
     }
   }
 
