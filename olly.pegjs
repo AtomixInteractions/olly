@@ -325,6 +325,7 @@ Statement
   / HostDefinition
   / MediaTypeDefinition
   / ModelDefinition
+  / DefaultControllerDefinition
 
 
 // ===== LITERALS ===== //
@@ -435,6 +436,7 @@ ApiStatement
   = VersionDefinition
   / SchemeDefinition
   / HostDefinition
+  / DefaultControllerDefinition
   / MediaTypeDefinition
   / RouteDefinition
 
@@ -450,6 +452,18 @@ ApiDefinition "api"
       type:     "ApiDefinition",
       block:    block,
       version:  version ? Number(version.join('')) : []
+    }
+  }
+
+
+// ===== DEFAULT CONTROLLER DEFINITION ===== //
+
+
+DefaultControllerDefinition
+  = ControllerToken __ name:ControllerName EOS {
+    return {
+      type:         "DefaultControllerDefinition",
+      controller:   name
     }
   }
 
