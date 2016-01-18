@@ -477,16 +477,25 @@ RoutePath
     return head + tail.join('');
   }
 
+ControllerNamePart
+  = name:IdentifierName { return name.name }
+  / "_" { return text() }
+
+ControllerName
+  = head:ControllerNamePart tail:("/" ControllerNamePart)* {
+    return text();
+  }
+
 RouteToStatement
-  = ToToken __ controller:IdentifierName "@" action:IdentifierName {
+  = ToToken __ controller:ControllerName "@" action:IdentifierName {
     return {
-      controller: controller.name,
+      controller: controller,
       action: action.name
     }
   }
-  / ToToken __ controller:IdentifierName {
+  / ToToken __ controller:ControllerName {
     return {
-      controller: controller.name,
+      controller: controller,
       action: false
     }
   }
