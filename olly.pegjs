@@ -444,7 +444,7 @@ ApiStatementList
   = head:ApiStatement tail:(__ ApiStatement)* { return buildList(head, tail, 1); }
 
 ApiBlock "api block"
-  = "{" __ body:(ApiStatementList __)? "}" { return builtBlockStatement(extractOptional(body, 0)); }
+  = "{" __ body:(ApiStatementList __)? "}" { return extractOptional(body, 0); }
 
 ApiDefinition "api"
   = ApiToken __ version:(DecimalDigit+)? __ block:ApiBlock {
