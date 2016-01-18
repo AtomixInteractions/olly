@@ -496,12 +496,12 @@ RouteToStatement
   / ToToken __ controller:ControllerName {
     return {
       controller: controller,
-      action: false
+      action: null
     }
   }
   / ToToken __ "@" action:IdentifierName {
     return {
-      controller: false,
+      controller: null,
       action: action.name
     }
   }
