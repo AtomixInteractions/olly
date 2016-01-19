@@ -401,6 +401,7 @@ PropStatement "prop"
 ModelStatement
   = PropStatement
   / ModelExtendsDefinition
+  / ModelValidationsDefinition
 
 ModelStatementList
   = head:ModelStatement tail:(__ ModelStatement)* { return buildList(head, tail, 1); }
@@ -409,11 +410,49 @@ ModelBlock "model block"
   = "{" __ body:(ModelStatementList __)? "}" { return builtBlockStatement(extractOptional(body, 0)); }
 
 ModelDefinition "model"
-  = ModelToken __ modelName:Identifier __ block:ModelBlock {
+  = ModelToken __ modelName:Identifier __ block:ModelBlock EOS? {
     return {
       type:       "ModelDefinition",
       name:       modelName.name,
       block:      block
+    }
+  }
+
+
+// ===== REQUIRED PROP ===== //
+
+
+RequiredStatement
+  = RequiredToken __ name:IdentifierName EOS { return {
+      type:       "RequiredStatement",
+      multi:      false,
+      property:   name
+    }}
+  / RequiredToken __ "[" __ head:IdentifierName tail:("," __ IdentifierName)* "]" EOS { return {
+      type:       "RequiredStatement",
+      multi:      true,
+      properties: buildList(head, tail, 2)
+    }}
+
+
+// ===== MODEL REQUEST/RESPONSE VALIDATIONS ===== //
+
+ModelValidationStatement
+  = RequiredStatement
+//  / OptionalStatement
+
+ModelValidationsStatementList
+  = head:ModelValidationStatement tail:(__ ModelValidationStatement)* { return buildList(head, tail, 1); }
+
+ModelType
+  = RequiredToken { return text(); }
+  / ResponseToken { return text(); }
+
+ModelValidationsDefinition
+  = type:ModelType __ "{" __ body:(ModelValidationsStatementList __)? "}" EOS? {
+    return {
+      type:   type,
+      block:  extractOptional(body, 0)
     }
   }
 
@@ -446,7 +485,7 @@ ApiBlock "api block"
   = "{" __ body:(ApiStatementList __)? "}" { return extractOptional(body, 0); }
 
 ApiDefinition "api"
-  = ApiToken __ version:(DecimalDigit+)? __ block:ApiBlock {
+  = ApiToken __ version:(DecimalDigit+)? __ block:ApiBlock EOS? {
     return {
       type:     "ApiDefinition",
       version:  version ? Number(version.join('')) : [],
