@@ -118,15 +118,12 @@ Comment "comment"
   = "#" (!LineTerminator SourceCharacter)*
 
 ReservedWord
-  = Keyword
-
-Keyword
-  = StringToken
-  / BooleanToken
-  / NumberToken
-  / ObjectToken
-  / DateToken
+  = NullToken
+  / TrueToken
+  / FalseToken
+  / NoneToken
   / ModelToken
+  / ExtendsToken
   / ApiToken
   / HostToken
   / SchemeToken
@@ -135,17 +132,13 @@ Keyword
   / ResponseToken
   / RequiredToken
   / ErrorToken
-  / ResourcesToken
-  / ResourceToken
-  / ConcernToken
+  / ScopeToken
   / ImportToken
-  / ExcludeToken
-  / OnlyToken
   / MediaTypeToken
   / ControllerToken
   / ToToken
-  / ExcessToken
   / VersionToken
+  / UseToken
   / HeaderToken
   / PathToken
   / GetToken
@@ -213,11 +206,6 @@ TrueToken             = "true"          !IdentifierPart
 FalseToken            = "false"         !IdentifierPart
 NoneToken             = "none"          !IdentifierPart
 
-StringToken           = "String"        !IdentifierPart
-BooleanToken          = "Boolean"       !IdentifierPart
-NumberToken           = "Number"        !IdentifierPart
-ObjectToken           = "Object"        !IdentifierPart
-DateToken             = "Date"          !IdentifierPart
 ModelToken            = "model"         !IdentifierPart
 ExtendsToken          = "extends"       !IdentifierPart
 ApiToken              = "api"           !IdentifierPart
@@ -228,18 +216,13 @@ RequestToken          = "request"       !IdentifierPart
 ResponseToken         = "response"      !IdentifierPart
 RequiredToken         = "required"      !IdentifierPart
 ErrorToken            = "error"         !IdentifierPart
-ResourcesToken        = "resources"     !IdentifierPart
-ResourceToken         = "resource"      !IdentifierPart
-ConcernToken          = "concern"       !IdentifierPart
+ScopeToken            = "scope"         !IdentifierPart
 ImportToken           = "import"        !IdentifierPart
-ExcludeToken          = "exclude"       !IdentifierPart
-OnlyToken             = "only"          !IdentifierPart
 MediaTypeToken        = "mediaType"     !IdentifierPart
 ControllerToken       = "controller"    !IdentifierPart
 ToToken               = "to"            !IdentifierPart
-ExcessToken           = "excess"        !IdentifierPart
 VersionToken          = "version"       !IdentifierPart
-DeprecatedToken       = "deprecated"    !IdentifierName
+UseToken              = "use"           !IdentifierPart
 
 HeaderToken           = "header"        !IdentifierPart
 PathToken             = "path"          !IdentifierPart
@@ -536,6 +519,11 @@ RouteToStatement
     }
   }
 
+RouteUseModel
+  = UseToken __ modelName:Identifier {
+    return modelName.name;
+  }
+
 RouteCondition "route condition"
   = path:RoutePath __ to:RouteToStatement {
     return {
@@ -543,51 +531,14 @@ RouteCondition "route condition"
       to: to
     }
   }
-  / path:RoutePath {
-    return {
-      path: path,
-      to: { controller: false, action: false }
-    }
-  }
 
 RouteDefinition "route"
-  = method:RouteToken __ condition:RouteCondition __ block:RouteBlock {
+  = method:RouteToken __ condition:RouteCondition __ use:RouteUseModel? EOS {
     return {
       type:         "RouteDefinition",
       method:       method.join('').toUpperCase(),
-      condition:    (condition ? condition : {}),
-      block:        builtBlockStatement(block)
-    }
-  }
-  / method:RouteToken __ condition:RouteCondition EOS {
-    return {
-      type:         "RouteDefinition",
-      method:       method.join('').toUpperCase(),
-      condition:    (condition ? condition : {}),
-      block:        builtBlockStatement({})
-    }
-  }
-
-
-// ===== ROUTE STATEMENTS ===== //
-
-RouteStatement
-  = DeprecatedStatement
-
-RouteStatementList
-  = head:RouteStatement tail:(__ RouteStatement)* { return buildList(head, tail, 1); }
-
-RouteBlock
-  = "{" __ body:(RouteStatementList __)? "}" { return builtBlockStatement(extractOptional(body, 0)); }
-
-
-// ===== DEPRECATED STATEMENT ===== //
-
-DeprecatedStatement "deprecated"
-  = DeprecatedToken __ reason:StringLiteral EOS {
-    return {
-      type:     "DeprecatedStatement",
-      reason:   reason.value
+      condition:    condition,
+      use:          use
     }
   }
 
