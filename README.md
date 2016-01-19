@@ -82,23 +82,30 @@ api 0 {
   # base get, post, put, patch, delete
   # routes must starts with "/"
 
-  get /about; # default resolve to action "about" of controller "index"
-  post /register to index; # resolve to action "register" of controller "index"
-  put /recover to user@recover; # resolve to action "user" of controller "user".
-  # if patch not specified, was created alias for put
-  delete /session/:token; # resolve to action "delete" of controller "index" with `token` param
+  get /about; # default resolve to action "getAbout" of controller "index"
+  post /register to @register; # resolve to action "createRegister" of controller "index"
+  put /recover to user@recover; # resolve to action "recover" of controller "user".
+  # if patch not specified, was created alias to put
+  delete /session/:token; # resolve to action "removeSession" of default controller with `token` param
 
   # What model use on route
-  post /login to user use User;
+  post /login to user use User; # resolve to createLogin
 
   # define one resource
   # scope can be without model
   scope /back {
-    # scope without controller not create route
+    # scope not create route
 
     post / to @new; # resolve to back@new
   }
 
+  # Set controller for scope
+  # Does scope need `use Model`?
+  scope /whishlist to use/whishlist {
+    get    /         to @list;
+    post   /         to @add;
+    delete /:id      to @remove; # resolve to use/whishlist@remove
+  }
 }
 
 
