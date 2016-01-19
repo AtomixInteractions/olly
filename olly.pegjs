@@ -448,7 +448,7 @@ ModelExtendsDefinition
 
 // ===== API DEFINITION ===== //
 
-ApiStatement
+ApiStatement "global definition"
   = VersionDefinition
   / SchemeDefinition
   / HostDefinition
@@ -466,8 +466,8 @@ ApiDefinition "api"
   = ApiToken __ version:(DecimalDigit+)? __ block:ApiBlock {
     return {
       type:     "ApiDefinition",
-      block:    block,
-      version:  version ? Number(version.join('')) : []
+      version:  version ? Number(version.join('')) : [],
+      block:    block
     }
   }
 
@@ -475,7 +475,7 @@ ApiDefinition "api"
 // ===== DEFAULT CONTROLLER DEFINITION ===== //
 
 
-DefaultControllerDefinition
+DefaultControllerDefinition "controller"
   = ControllerToken __ name:ControllerName EOS {
     return {
       type:         "DefaultControllerDefinition",
@@ -486,7 +486,7 @@ DefaultControllerDefinition
 
 // ===== ROUTES DEFINITION ===== //
 
-RouteToken
+RouteToken "routes"
   = GetToken
   / PostToken
   / PutToken
