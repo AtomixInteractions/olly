@@ -215,6 +215,7 @@ PropToken             = "prop"          !IdentifierPart
 RequestToken          = "request"       !IdentifierPart
 ResponseToken         = "response"      !IdentifierPart
 RequiredToken         = "required"      !IdentifierPart
+OptionalToken         = "optional"      !IdentifierPart
 ErrorToken            = "error"         !IdentifierPart
 ScopeToken            = "scope"         !IdentifierPart
 ImportToken           = "import"        !IdentifierPart
@@ -419,34 +420,31 @@ ModelDefinition "model"
   }
 
 
-// ===== REQUIRED PROP ===== //
-
-
-RequiredStatement
-  = RequiredToken __ name:IdentifierName EOS { return {
-      type:       "RequiredStatement",
-      multi:      false,
-      property:   name
-    }}
-  / RequiredToken __ "[" __ head:IdentifierName tail:("," __ IdentifierName)* "]" EOS { return {
-      type:       "RequiredStatement",
-      multi:      true,
-      properties: buildList(head, tail, 2)
-    }}
-
 
 // ===== MODEL REQUEST/RESPONSE VALIDATIONS ===== //
 
+ModelValidationVariant
+  = RequiredToken { return "RequiredStatement" }
+  / OptionalToken { return "OptionalStatement" }
+
 ModelValidationStatement
-  = RequiredStatement
-//  / OptionalStatement
+  = type:ModelValidationVariant __ head:IdentifierName tail:("," __ IdentifierName)* EOS { return {
+      type:       type,
+      single:      false,
+      properties:  buildList(head, tail, 2)
+    }}
+  / type:ModelValidationVariant __ "[" __ head:IdentifierName tail:("," __ IdentifierName)* "]" EOS { return {
+      type:       type,
+      single:     true,
+      properties: buildList(head, tail, 2)
+    }}
 
 ModelValidationsStatementList
   = head:ModelValidationStatement tail:(__ ModelValidationStatement)* { return buildList(head, tail, 1); }
 
 ModelType
-  = RequiredToken { return text(); }
-  / ResponseToken { return text(); }
+  = RequestToken { return "ModelRequestValidations" }
+  / ResponseToken { return "ModelResponseValidations" }
 
 ModelValidationsDefinition
   = type:ModelType __ "{" __ body:(ModelValidationsStatementList __)? "}" EOS? {
