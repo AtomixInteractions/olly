@@ -475,6 +475,7 @@ ApiStatement "global definition"
   / DefaultControllerDefinition
   / MediaTypeDefinition
   / RouteDefinition
+  / ScopeDefinition
 
 ApiStatementList
   = head:ApiStatement tail:(__ ApiStatement)* { return buildList(head, tail, 1); }
@@ -491,6 +492,31 @@ ApiDefinition "api"
     }
   }
 
+
+// ===== SCOPE DEFINITION ===== //
+
+ScopeStatement
+  = DefaultControllerDefinition
+  / RouteDefinition
+
+ScopeStatementList
+  = head:ScopeStatement tail:(__ ScopeStatement)* { return buildList(head, tail, 1); }
+
+ScopeDefinition "scope"
+  = ScopeToken __ path:RoutePath __ "{" __ body:(ScopeStatementList __)?  "}" EOS? {
+    return {
+      type:     "ScopeDefinition",
+      target:   { path: path },
+      body:     extractOptional(body, 0)
+    }
+  }
+  / ScopeToken __ target:RouteCondition __ "{" __ body:(ScopeStatementList __)?  "}" EOS? {
+    return {
+      type:     "ScopeDefinition",
+      target:   target,
+      body:     extractOptional(body, 0)
+    }
+  }
 
 // ===== DEFAULT CONTROLLER DEFINITION ===== //
 
@@ -521,6 +547,7 @@ RoutePathIdentifier
 RoutePathTail
   = "/" RoutePathIdentifier { return text(); }
   / "/:" RoutePathIdentifier { return text(); }
+  / "/" { return "/"; }
 
 RoutePath
   = head:RoutePathTail tail:RoutePathTail* {
@@ -574,8 +601,8 @@ RouteDefinition "route"
     return {
       type:         "RouteDefinition",
       method:       method.join('').toUpperCase(),
-      condition:    condition,
-      use:          use
+      use:          use,
+      condition:    condition
     }
   }
 
