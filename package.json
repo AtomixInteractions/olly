@@ -1,6 +1,6 @@
 {
   "name": "olly",
-  "version": "0.0.0-dev.7",
+  "version": "0.0.0-dev.8",
   "description": "Micro framework for building REST API",
   "main": "lib/service",
   "scripts": {
