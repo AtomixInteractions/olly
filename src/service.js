@@ -1,9 +1,7 @@
 
-class Olly {
+export default class Olly {
   constructor() {
     this.demo = 'Not implemented!';
   }
 }
 
-
-module.exports = Olly;
