@@ -8,7 +8,7 @@
     "coverage": "istanbul cover node_modules/.bin/_mocha -- -r should -R spec",
     "build": "gulp build",
     "dev": "nodemon -w ./src --exec gulp build",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "npm run build && npm run test"
   },
   "bin": {
     "olly": "bin/olly.js"
