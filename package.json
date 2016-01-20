@@ -1,13 +1,14 @@
 {
   "name": "olly",
-  "version": "0.0.0-dev.6",
+  "version": "0.0.0-dev.7",
   "description": "Micro framework for building REST API",
   "main": "lib/service",
   "scripts": {
     "test": "NODE_ENV=test mocha -r should -R spec",
     "coverage": "istanbul cover node_modules/.bin/_mocha -- -r should -R spec",
     "build": "gulp build",
-    "dev": "nodemon -w ./src --exec gulp build"
+    "dev": "nodemon -w ./src --exec gulp build",
+    "prepublish": "npm run test && npm run build"
   },
   "bin": {
     "olly": "bin/olly.js"
