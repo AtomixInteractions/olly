@@ -1,6 +1,6 @@
 {
   "name": "olly",
-  "version": "0.0.0-dev.11",
+  "version": "0.0.0-dev.12",
   "description": "Micro framework for building REST API",
   "main": "lib/service",
   "scripts": {
@@ -34,7 +34,9 @@
     "Ivan Takarlikov <vtakarlikov@gmail.com> (https://github.com/x1ting)"
   ],
   "homepage": "https://github.com/AtomixInteractions/olly#readme",
-  "dependencies": {},
+  "dependencies": {
+    "olly.parser": "0.0.0-dev.10"
+  },
   "devDependencies": {
     "babel-core": "^5.8.34",
     "gulp": "^3.9.0",
