@@ -1,6 +1,6 @@
 {
   "name": "olly",
-  "version": "0.0.0-dev.9",
+  "version": "0.0.0-dev.10",
   "description": "Micro framework for building REST API",
   "main": "lib/service",
   "scripts": {
@@ -30,6 +30,9 @@
   "bugs": {
     "url": "https://github.com/AtomixInteractions/olly/issues"
   },
+  "contributors": [
+    "Ivan Takarlikov <vtakarlikov@gmail.com> (https://github.com/x1ting)"
+  ],
   "homepage": "https://github.com/AtomixInteractions/olly#readme",
   "dependencies": {},
   "devDependencies": {
