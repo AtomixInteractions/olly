@@ -510,10 +510,10 @@ ScopeDefinition "scope"
       body:     extractOptional(body, 0)
     }
   }
-  / ScopeToken __ target:RouteCondition __ "{" __ body:(ScopeStatementList __)?  "}" EOS? {
+  / ScopeToken __ path:RoutePath __ ToToken __ controller:ControllerName __ "{" __ body:(ScopeStatementList __)?  "}" EOS? {
     return {
       type:     "ScopeDefinition",
-      target:   target,
+      target:   { path: path, controller: controller },
       body:     extractOptional(body, 0)
     }
   }
@@ -578,7 +578,7 @@ RouteToStatement
 
 RouteUseModel
   = UseToken __ modelName:Identifier {
-    return modelName.name;
+    return { model: modelName.name };
   }
 
 RouteCondition "route condition"
