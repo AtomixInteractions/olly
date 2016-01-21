@@ -564,21 +564,14 @@ ControllerName
   }
 
 RouteToStatement
-  = ToToken __ controller:ControllerName "@" action:IdentifierName {
+  = ToToken __ action:IdentifierName "@" controller:ControllerName {
     return {
       controller: controller,
       action: action.name
     }
   }
-  / ToToken __ controller:ControllerName {
+  / ToToken __ action:IdentifierName {
     return {
-      controller: controller,
-      action: null
-    }
-  }
-  / ToToken __ "@" action:IdentifierName {
-    return {
-      controller: null,
       action: action.name
     }
   }
