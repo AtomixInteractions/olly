@@ -11,4 +11,3 @@ export default class Olly {
     console.log(parse(this.d));
   }
 }
-

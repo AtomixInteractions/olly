@@ -306,11 +306,9 @@ StatementList
 
 Statement
   = ApiDefinition
-  / SchemeDefinition
-  / HostDefinition
-  / MediaTypeDefinition
   / ModelDefinition
-  / DefaultControllerDefinition
+//  / HostDefinition
+//  / SchemeDefinition
 
 
 // ===== LITERALS ===== //
