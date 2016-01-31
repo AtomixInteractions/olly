@@ -14,3 +14,13 @@ Now in development [join](https://github.com/AtomixInteractions/olly/pulls)
 Olly — micro framework for building REST API. Olly configurable by nginx-like config.
 
 See the [api.conf](api.conf) for example
+
+
+## Development
+
+```bash
+npm install
+npm run dev # run recompile olly on changes
+
+npm run emo # run recompile demo on changes
+```

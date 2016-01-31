@@ -1,6 +1,6 @@
 {
   "name": "olly",
-  "version": "0.0.0-dev.13",
+  "version": "0.0.1-dev.14",
   "description": "Micro framework for building REST API",
   "main": "lib/service",
   "scripts": {
@@ -8,7 +8,8 @@
     "coverage": "istanbul cover node_modules/.bin/_mocha -- -r should -R spec",
     "build": "gulp build",
     "dev": "nodemon -w ./src --exec gulp build",
-    "prepublish": "npm run build && npm run test"
+    "prepublish": "npm run build && npm run test",
+    "demo": "DEBUG=olly,olly:application,olly:generate nodemon ./demo.js"
   },
   "bin": {
     "olly": "bin/olly.js"
@@ -35,16 +36,24 @@
   ],
   "homepage": "https://github.com/AtomixInteractions/olly#readme",
   "dependencies": {
+    "merge-descriptors": "^1.0.1",
+    "methods": "^1.1.2",
+    "nonstandard": "^0.10.3-toc",
     "olly.parser": "0.0.0-dev.10"
   },
   "devDependencies": {
+    "babel": "^6.3.26",
     "babel-core": "^5.8.34",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "debug": "^2.2.0",
     "gulp": "^3.9.0",
-    "gulp-babel": "^5.3.0",
+    "gulp-babel": "^6.1.2",
     "gulp-peg": "^0.2.0",
     "gulp-rimraf": "^0.2.0",
-    "mocha": "^2.3.4",
+    "mocha": "^2.4.5",
     "pegjs": "^0.9.0",
-    "should": "^8.1.1"
+    "should": "^8.2.1"
   }
 }

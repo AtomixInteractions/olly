@@ -10,7 +10,10 @@ var peg = require('gulp-peg');
  */
 gulp.task('build', ['pegjs'], function() {
   return gulp.src(['src/**/*.js'])
-    .pipe(babel())
+    .pipe(babel({
+      presets: ['es2015', 'stage-0'],
+      plugins: ['transform-decorators-legacy']
+    }))
     .pipe(gulp.dest('lib'));
 });
 

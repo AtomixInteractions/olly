@@ -1,0 +1,22 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+			],
+			"name": "Sources",
+			"path": "src"
+		},
+		{
+			"folder_exclude_patterns":
+			[
+				"node_modules",
+				"lib",
+				"coverage"
+			],
+			"name": "Olly",
+			"path": "."
+		}
+	]
+}

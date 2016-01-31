@@ -293,7 +293,7 @@ EOF
 Block
   = "{" __ body:(StatementList __)? "}" {
     return {
-      type: "BlockStatement",
+      type: "Block",
       body: optionalList(extractOptional(body, 0))
     }
   }
@@ -390,7 +390,7 @@ PropAssignStatement
 PropStatement "prop"
   = PropToken __ type:PropType __ id:PropIdentifier __ value:PropAssignStatement? EOS {
     return {
-      type:       "PropStatement",
+      type:       "Property",
       propType:   type,
       propId:     id,
       value:      value
@@ -411,7 +411,7 @@ ModelBlock "model block"
 ModelDefinition "model"
   = ModelToken __ modelName:Identifier __ block:ModelBlock EOS? {
     return {
-      type:       "ModelDefinition",
+      type:       "Model",
       name:       modelName.name,
       block:      block
     }
@@ -422,8 +422,8 @@ ModelDefinition "model"
 // ===== MODEL REQUEST/RESPONSE VALIDATIONS ===== //
 
 ModelValidationVariant
-  = RequiredToken { return "RequiredStatement" }
-  / OptionalToken { return "OptionalStatement" }
+  = RequiredToken { return "Required" }
+  / OptionalToken { return "Optional" }
 
 ModelValidationStatement
   = type:ModelValidationVariant __ head:IdentifierName tail:("," __ IdentifierName)* EOS { return {
@@ -458,7 +458,7 @@ ModelValidationsDefinition
 ModelExtendsDefinition
   = ExtendsToken __ name:IdentifierName EOS {
     return {
-      type:       "ModelExtendsDefinition",
+      type:       "ModelExtends",
       extends:    name
     }
   }
@@ -484,9 +484,9 @@ ApiBlock "api block"
 ApiDefinition "api"
   = ApiToken __ version:(DecimalDigit+)? __ block:ApiBlock EOS? {
     return {
-      type:     "ApiDefinition",
+      type:     "Api",
       version:  version ? Number(version.join('')) : [],
-      block:    block
+      body:    block
     }
   }
 
@@ -496,6 +496,7 @@ ApiDefinition "api"
 ScopeStatement
   = DefaultControllerDefinition
   / RouteDefinition
+  / ScopeDefinition
 
 ScopeStatementList
   = head:ScopeStatement tail:(__ ScopeStatement)* { return buildList(head, tail, 1); }
@@ -503,14 +504,14 @@ ScopeStatementList
 ScopeDefinition "scope"
   = ScopeToken __ path:RoutePath __ "{" __ body:(ScopeStatementList __)?  "}" EOS? {
     return {
-      type:     "ScopeDefinition",
+      type:     "Scope",
       target:   { path: path },
       body:     extractOptional(body, 0)
     }
   }
   / ScopeToken __ path:RoutePath __ ToToken __ controller:ControllerName __ "{" __ body:(ScopeStatementList __)?  "}" EOS? {
     return {
-      type:     "ScopeDefinition",
+      type:     "Scope",
       target:   { path: path, controller: controller },
       body:     extractOptional(body, 0)
     }
@@ -522,7 +523,7 @@ ScopeDefinition "scope"
 DefaultControllerDefinition "controller"
   = ControllerToken __ name:ControllerName EOS {
     return {
-      type:         "DefaultControllerDefinition",
+      type:         "DefaultController",
       controller:   name
     }
   }
@@ -590,7 +591,7 @@ RouteCondition "route condition"
 RouteDefinition "route"
   = method:RouteToken __ condition:RouteCondition __ use:RouteUseModel? EOS {
     return {
-      type:         "RouteDefinition",
+      type:         "Route",
       method:       method.join('').toUpperCase(),
       use:          use,
       condition:    condition
@@ -614,7 +615,7 @@ MediaTypeValue
 MediaTypeDefinition "mediaType"
   = MediaTypeToken __ head:MediaTypeValue tail:(__ MediaTypeValue)* EOS {
     return {
-      type:       "MediaTypeDefinition",
+      type:       "MediaType",
       values:     buildList(head, tail, 1)
     }
   }
@@ -640,7 +641,7 @@ HostExtendedPart
 HostDefinition "host"
   = HostToken __ host:HostBasePart ext:HostExtendedPart? EOS {
     return {
-      type:     "HostDefinition",
+      type:     "Host",
       host:     host + (ext ? ext : '')
     }
   }
@@ -690,7 +691,7 @@ VersionPath
 VersionDefinition "version"
   = VersionToken __ HeaderToken __ name:HeaderLiteral __ "\"" value:HeaderValue "\"" EOS {
     return {
-      type: "VersionDefinition",
+      type: "Version",
       mode: "header",
       name: name,
       value: value
@@ -698,14 +699,14 @@ VersionDefinition "version"
   }
   / VersionToken __ PathToken __ path:VersionPath? EOS {
     return {
-      type: "VersionDefinition",
+      type: "Version",
       mode: "path",
       path: path ? path : null
     }
   }
   / VersionToken __ NoneToken EOS {
     return {
-      type: "VersionDefinition",
+      type: "Version",
       mode: "none"
     }
   }
@@ -722,7 +723,7 @@ SchemeValuesList
 SchemeDefinition "scheme"
   = SchemeToken __ head:SchemeValuesList __ tail:(SchemeValuesList*) EOS {
     return {
-      type:    "SchemeDefinition",
+      type:    "Scheme",
       values:  [head].concat(tail)
     }
   }
