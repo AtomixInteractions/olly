@@ -8,4 +8,3 @@ export default class DefaultController extends Node {
     this.parent.setDefaultController(this.node.controller);
   }
 }
-

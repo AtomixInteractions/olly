@@ -1,12 +1,14 @@
 
 import 'nonstandard';
-import { EventEmitter } from 'events';
-import Debug from 'debug';
+
 import HTTP from 'http';
-import { resolve } from 'path';
-import HttpMethods from 'methods';
-import { readFileSync } from 'fs';
+import Debug from 'debug';
 import Express from 'express';
+import HttpMethods from 'methods';
+
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
+import { EventEmitter } from 'events';
 
 import { parse as ParseConfig } from './olly';
 import * as Generate from './generate/';

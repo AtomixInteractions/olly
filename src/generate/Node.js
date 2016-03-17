@@ -4,6 +4,7 @@ import Debug from 'debug';
 
 const debug = Debug(`olly:generate`);
 
+
 export default class Node {
   parent = null;
   node = null;
@@ -60,4 +61,3 @@ export default class Node {
     return new this(node, parent, skipCheck);
   }
 }
-

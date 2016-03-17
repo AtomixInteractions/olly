@@ -1,7 +1,6 @@
 
-
-
 import Node from './Node';
+
 
 export default class Route extends Node {
   method = 'GET';
@@ -28,4 +27,3 @@ export default class Route extends Node {
     this.parent.addRoute(this.path, this);
   }
 }
-
