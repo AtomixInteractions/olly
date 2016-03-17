@@ -10,7 +10,7 @@ import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { EventEmitter } from 'events';
 
-import { parse as ParseConfig } from './olly';
+import { parse as ParseConfig } from 'olly.parser';
 import * as Generate from './generate/';
 
 const debug = Debug('olly:application');
