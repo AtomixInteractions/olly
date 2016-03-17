@@ -39,7 +39,7 @@
   "dependencies": {
     "express": "^4.13.4",
     "nonstandard": "^0.10.3-toc",
-    "olly.parser": "^0.0.1"
+    "olly.parser": "^0.0.3"
   },
   "devDependencies": {
     "babel": "^6.3.26",
