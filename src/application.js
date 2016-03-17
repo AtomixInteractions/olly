@@ -6,6 +6,7 @@ import HTTP from 'http';
 import { resolve } from 'path';
 import HttpMethods from 'methods';
 import { readFileSync } from 'fs';
+import Express from 'express';
 
 import { parse as ParseConfig } from './olly';
 import * as Generate from './generate/';
@@ -13,39 +14,18 @@ import * as Generate from './generate/';
 const debug = Debug('olly:application');
 
 
-export class Application extends EventEmitter {
-
-  cache = {};
-  engines = {};
-  settings = {};
-  locals = {};
-  mountpath = '/';
+export class Application {
+  exp = null
   configuration = {};
+  map = {};
 
   constructor() {
-    super();
-
-    this.defaultConfiguration();
+    this.exp = Express();
   }
 
-
-  defaultConfiguration() {
-    const env = process.env.NODE_ENV || 'development';
-
-    this.enable('x-powered-by');
-    this.set('env', env);
-
-    debug('booting in %s mode', env);
-
-    this.on('mount', (parent) => {
-      debug('Mounting');
-    });
-
-    this.locals = Object.create(null);
-    this.locals.settings = this.settings;
-
+  controller(name, ctrl) {
+    this.map[name] = ctrl;
   }
-
 
   loadConfiguration(configFile) {
     debug('loding configuration %s file', configFile);
@@ -55,36 +35,31 @@ export class Application extends EventEmitter {
     debug(config);
 
     this.configuration = Generate.load(config);
+    console.log(this.configuration);
   }
 
+  /**
+   * Add routes to app
+   */
+  installRoutes() {
+    console.log(this.configuration.routes);
+    for (const name in this.configuration.routes) {
+      const { method, path, controller, action } = this.configuration.routes[name];
+      const controllerObject = this.map[controller];
 
-  set(setting, value) {
-    this.settings[setting] = value;
-    return this;
+      if (!controllerObject) {
+        throw new Error(`Controller "${controller}" not found`);
+      }
+      if (!controllerObject[action]) {
+        throw new Error(`Action "${action}" not found in controller "${controller}"`);
+      }
+
+      this.exp[method.toLowerCase()](path, controllerObject[action]);
+    }
   }
 
-
-  enabled(setting) {
-    return Boolean(this.settings[setting]);
-  }
-
-
-  disabled(setting) {
-    return !(this.settings[setting]);
-  }
-
-
-  enable(setting) {
-    return this.set(setting, true);
-  }
-
-
-  disable(setting) {
-    return this.set(setting, false);
-  }
-
-
-  handle(req, res) {
-
+  listen(port, callback = () => {}) {
+    this.installRoutes();
+    this.exp.listen(port, callback);
   }
 }

@@ -23,4 +23,13 @@ export default class Api extends Scope {
     this.mediaType = mt;
     console.info('Fix setter mediaType!')
   }
+
+  getVersionPath() {
+    return '/v' + this.version;
+  }
+
+  addRoute(path, route) {
+    this.installController(route);
+    this.parent.addRoute(this.getVersionPath() + path, route);
+  }
 }
