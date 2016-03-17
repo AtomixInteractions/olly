@@ -4,9 +4,11 @@ import Debug from 'debug';
 
 const debug = Debug(`olly:generate`);
 
+
 export default class Node {
   parent = null;
   node = null;
+  root = null;
   acceptNodes = [];
 
   constructor(node, parent, skipCheck = false) {
@@ -17,6 +19,12 @@ export default class Node {
 
     this.node = node;
     this.parent = parent;
+    if (parent) {
+      this.root = parent.root;
+    }
+    else {
+      this.root = parent;
+    }
     this.init();
   }
 
@@ -53,4 +61,3 @@ export default class Node {
     return new this(node, parent, skipCheck);
   }
 }
-
