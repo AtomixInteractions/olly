@@ -125,8 +125,6 @@ ReservedWord
   / ModelToken
   / ExtendsToken
   / ApiToken
-  / HostToken
-  / SchemeToken
   / PropToken
   / RequestToken
   / ResponseToken
@@ -209,8 +207,6 @@ NoneToken             = "none"          !IdentifierPart
 ModelToken            = "model"         !IdentifierPart
 ExtendsToken          = "extends"       !IdentifierPart
 ApiToken              = "api"           !IdentifierPart
-HostToken             = "host"          !IdentifierPart
-SchemeToken           = "scheme"        !IdentifierPart
 PropToken             = "prop"          !IdentifierPart
 RequestToken          = "request"       !IdentifierPart
 ResponseToken         = "response"      !IdentifierPart
@@ -307,8 +303,6 @@ StatementList
 Statement
   = ApiDefinition
   / ModelDefinition
-//  / HostDefinition
-//  / SchemeDefinition
 
 
 // ===== LITERALS ===== //
@@ -468,8 +462,6 @@ ModelExtendsDefinition
 
 ApiStatement "global definition"
   = VersionDefinition
-  / SchemeDefinition
-  / HostDefinition
   / DefaultControllerDefinition
   / MediaTypeDefinition
   / RouteDefinition
@@ -621,32 +613,6 @@ MediaTypeDefinition "mediaType"
   }
 
 
-// ===== HOST DEFINITION ===== //
-
-HostBaseIdentifier
-  = id:IdentifierName {
-   return id.name;
-  }
-
-HostBasePart
-  = head:HostBaseIdentifier tail:("." HostBaseIdentifier)+ {
-    return text();
-  }
-
-HostExtendedPart
-  = "/" head:HostBaseIdentifier tail:("/" HostBaseIdentifier)* {
-    return text();
-  }
-
-HostDefinition "host"
-  = HostToken __ host:HostBasePart ext:HostExtendedPart? EOS {
-    return {
-      type:     "Host",
-      host:     host + (ext ? ext : '')
-    }
-  }
-
-
 // ===== VERSION DEFINITION ===== //
 
 HeaderLiteralPart
@@ -708,23 +674,6 @@ VersionDefinition "version"
     return {
       type: "Version",
       mode: "none"
-    }
-  }
-
-
-
-// ===== SCHEME DEFINITION ===== //
-
-
-SchemeValuesList
-  = "https"
-  / "http"
-
-SchemeDefinition "scheme"
-  = SchemeToken __ head:SchemeValuesList __ tail:(SchemeValuesList*) EOS {
-    return {
-      type:    "Scheme",
-      values:  [head].concat(tail)
     }
   }
 
