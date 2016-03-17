@@ -17,7 +17,12 @@ app.controller('session', {
 app.controller('settings', {
   settings(req, res)           { res.json({ settings: true }) },
   settings_update(req, res)    { res.json({ settings_update: true }) },
-})
+});
+
+app.controller('demo', {
+  demo(req, res)               { res.json({ demo: 'okay' }) },
+  hello(req, res)               { res.json({ hello: 'world' }) },
+});
 
 
 app.listen(3000, function(){

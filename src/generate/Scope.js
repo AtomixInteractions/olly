@@ -13,6 +13,10 @@ export default class Scope extends Node {
     }
     console.log('Init Scope', this.target);
 
+    if (this.node.target.controller) {
+      this.defaultController = this.node.target.controller;
+    }
+
     this.acceptNodes = ['Version', 'Scheme', 'Host', 'DefaultController', 'MediaType', 'Route', 'Scope'];
     this.loadBody();
   }
