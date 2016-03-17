@@ -10,7 +10,7 @@
     "dev": "nodemon -w ./src --exec gulp build",
     "prepublish": "npm run build && npm run test",
     "demo": "DEBUG=olly,olly:application,olly:generate nodemon ./demo.js",
-    "changelog": "changelog-maker --group true"
+    "changelog": "changelog-maker --group true --filter-release true"
   },
   "bin": {
     "olly": "bin/olly.js"
