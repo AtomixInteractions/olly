@@ -42,7 +42,6 @@ export class Application {
    * Add routes to app
    */
   installRoutes() {
-    console.log(this.configuration.routes);
     for (const name in this.configuration.routes) {
       const { method, path, controller, action } = this.configuration.routes[name];
       const controllerObject = this.map[controller];
