@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AtomixInteractions/olly.git"
+    "url": "git+https://github.com/sensepoint/olly.git"
   },
   "keywords": [
     "server",
@@ -30,12 +30,12 @@
   "author": "Sergey Sova <i.am@lestad.net> (https://lestad.net)",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/AtomixInteractions/olly/issues"
+    "url": "https://github.com/sensepoint/olly/issues"
   },
   "contributors": [
     "Ivan Takarlikov <vtakarlikov@gmail.com> (http://takarlikov.com)"
   ],
-  "homepage": "https://github.com/AtomixInteractions/olly#readme",
+  "homepage": "https://github.com/sensepoint/olly#readme",
   "dependencies": {
     "express": "^4.13.4",
     "nonstandard": "^0.10.3-toc",
