@@ -16,7 +16,7 @@ export function load(configObject) {
     throw new Error('First node in configuration must be `Configuration`');
   }
 
-  return new NodeList['Configuration'](configObject);
+  return new NodeList.Configuration(configObject);
 }
 
 
